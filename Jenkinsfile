@@ -22,6 +22,23 @@ pipeline{
                 sh 'sleep 10'
             }
         }
+              stage('Genrate sonarqube-analysis'){
+            steps{
+                withSonarQubeEnv(installationName: 'Sonar-jenkins'){
+                    sh "mvn clean install  sonar:sonar  -Dsonar.login=admin -Dsonar.password=admin123 -Dsonar.projectKey=test-jenkins-war -Dsonar.projectName='test-jenkins-war'"
+        	    }
+            }
+        }
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    // Clean the workspace
+                    cleanWs()
+
+                    echo "Workspace cleaned successfully"
+                }
+            }
+        }
         stage('parameters'){
             steps{
                 sh 'echo "${person}"'
